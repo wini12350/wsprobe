@@ -1,0 +1,2 @@
+"""WSProbe: a local-lab WebSocket security tester."""
+__version__ = "1.0.0"
