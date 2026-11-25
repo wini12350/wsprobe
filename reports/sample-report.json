@@ -1,0 +1,25 @@
+{
+  "tool": "WSProbe",
+  "version": "1.0.0",
+  "generated_at_utc": "2026-11-20T15:04:36.659852+00:00",
+  "target": "ws://127.0.0.1:8765",
+  "scope": "localhost/loopback lab only",
+  "summary": {
+    "baseline_connection": "PASS",
+    "foreign_origin_check": "PASS - foreign Origin rejected",
+    "missing_origin_check": "PASS - missing Origin rejected",
+    "authentication_check": "PASS - missing token rejected",
+    "note": "Origin acceptance is an observation, not proof of exploitable CSWSH. Review browser cookie/authentication behavior and server-side controls."
+  },
+  "probes": [
+    {"probe": "baseline", "origin": "http://localhost:3000", "token_supplied": true, "classification": "accepted", "verdict": "PASS", "evidence": "WebSocket handshake completed successfully."},
+    {"probe": "foreign_origin", "origin": "https://attacker.example", "token_supplied": true, "classification": "rejected", "verdict": "PASS", "evidence": "InvalidStatus: server rejected WebSocket connection: HTTP 403 (HTTP status 403)", "http_status": 403},
+    {"probe": "missing_origin", "origin": null, "token_supplied": true, "classification": "rejected", "verdict": "PASS", "evidence": "InvalidStatus: server rejected WebSocket connection: HTTP 403 (HTTP status 403)", "http_status": 403},
+    {"probe": "missing_authentication_token", "origin": "http://localhost:3000", "token_supplied": false, "classification": "rejected", "verdict": "PASS", "evidence": "InvalidStatus: server rejected WebSocket connection: HTTP 401 (HTTP status 401)", "http_status": 401},
+    {"probe": "valid_json_object", "payload_bytes": 46, "classification": "normal_reply", "verdict": "PASS", "evidence": "{\"status\": \"ok\", \"message\": \"Valid message received\"}"},
+    {"probe": "malformed_json", "payload_bytes": 8, "classification": "error_reply", "verdict": "PASS", "evidence": "{\"status\": \"error\", \"message\": \"Malformed JSON\"}"},
+    {"probe": "unexpected_json_array", "payload_bytes": 22, "classification": "error_reply", "verdict": "PASS", "evidence": "{\"status\": \"error\", \"message\": \"Expected a JSON object\"}"},
+    {"probe": "unexpected_json_number", "payload_bytes": 2, "classification": "error_reply", "verdict": "PASS", "evidence": "{\"status\": \"error\", \"message\": \"Expected a JSON object\"}"},
+    {"probe": "oversized_frame", "payload_bytes": 70001, "classification": "close_frame", "verdict": "PASS", "evidence": "Connection closed (code=1009, reason='frame exceeds limit of 65536 bytes')"}
+  ]
+}
